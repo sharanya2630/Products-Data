@@ -44,7 +44,6 @@ const ProductList: React.FC<ProductListProps> = ({
   const handleDescriptionSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchDescription(e.target.value);
   };
-
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
   };
@@ -55,12 +54,16 @@ const ProductList: React.FC<ProductListProps> = ({
       product.description
         .toLowerCase()
         .includes(searchDescription.toLowerCase()) &&
-      (selectedCategory === "" || product.category === selectedCategory)
+      (selectedCategory === "" ||
+        selectedCategory === "All Categories" ||
+        product.category === selectedCategory)
   );
 
   const categoryMenu = (
     <Menu>
-      <Menu.Item key="">All Categories</Menu.Item>
+      <Menu.Item key="" onClick={() => handleCategorySelect("All Categories")}>
+        All Categories
+      </Menu.Item>
       <Menu.Divider />
       {Array.from(new Set(products.map((product) => product.category))).map(
         (category) => (
@@ -68,7 +71,7 @@ const ProductList: React.FC<ProductListProps> = ({
             key={category}
             onClick={() => handleCategorySelect(category)}
             style={{
-              border: selectedCategory === category ? "1px solid red" : "none", // Adjust border color and style as needed
+              border: selectedCategory === category ? "1px solid red" : "none",
             }}
           >
             {category}
@@ -78,18 +81,70 @@ const ProductList: React.FC<ProductListProps> = ({
     </Menu>
   );
 
+  // const handleCategorySelect = (category: string) => {
+  //   setSelectedCategory(category);
+  // };
+
+  // const filteredProducts = products.filter(
+  //   (product) =>
+  //     product.name.toLowerCase().includes(searchName.toLowerCase()) &&
+  //     product.description
+  //       .toLowerCase()
+  //       .includes(searchDescription.toLowerCase()) &&
+  //     (selectedCategory === "" || product.category === selectedCategory)
+  // );
+  // const filteredProducts = products.filter(
+  //   (product) =>
+  //     product.name.toLowerCase().includes(searchName.toLowerCase()) &&
+  //     product.description
+  //       .toLowerCase()
+  //       .includes(searchDescription.toLowerCase()) &&
+  //     (selectedCategory === "" ||
+  //       selectedCategory === "All Categories" ||
+  //       product.category === selectedCategory)
+  // );
+  // const categoryMenu = (
+  //   <Menu>
+  //     <Menu.Item key="">All Categories</Menu.Item>
+  //     <Menu.Divider />
+  //     {Array.from(new Set(products.map((product) => product.category))).map(
+  //       (category) => (
+  //         <Menu.Item
+  //           key={category}
+  //           onClick={() => handleCategorySelect(category)}
+  //           style={{
+  //             border: selectedCategory === category ? "1px solid red" : "none",
+  //           }}
+  //         >
+  //           {category}
+  //         </Menu.Item>
+  //       )
+  //     )}
+  //   </Menu>
+  // );
+
   const columns = [
     { title: "Category", dataIndex: "category", key: "category" },
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Description", dataIndex: "description", key: "description" },
     { title: "Price", dataIndex: "price", key: "price" },
     {
-      title: <div className="d-flex justify-content-end" style={{marginRight:"62px"}}>Actions</div>,
+      title: (
+        <div
+          className="d-flex justify-content-end"
+          style={{ marginRight: "62px" }}
+        >
+          Actions
+        </div>
+      ),
       key: "actions",
 
       render: (text: string, record: Product) => (
         <div className="btn-card">
-          <Button className="add-button" onClick={() => navigate("/add",{state:record})} >
+          <Button
+            className="add-button"
+            onClick={() => navigate("/add", { state: record })}
+          >
             Edit
           </Button>
           <Button className="add-button" onClick={() => onDelete(record.id)}>
